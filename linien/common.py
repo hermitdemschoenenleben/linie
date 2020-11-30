@@ -132,7 +132,7 @@ def determine_shift_by_correlation(zoom_factor, reference_signal, error_signal):
     return shift, zoomed_ref, downsampled_error_signal
 
 
-def get_lock_point(error_signal, x0, x1, final_zoom_factor=1.5):
+def get_lock_point(error_signal, x0, x1, final_zoom_factor=2):
     """Calculates parameters for the autolock based on the initial error signal.
 
     Takes the `error_signal` and two points (`x0` and `x1`) as arguments. The

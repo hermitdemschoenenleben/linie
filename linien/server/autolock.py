@@ -125,8 +125,10 @@ class Autolock:
                         allow_ramp_speed_change=True,
                         wait_time_between_current_corrections=self.wait_time_between_current_corrections
                     )
-                approaching_finished = self.approacher.approach_line(combined_error_signal)
+                final_shift = self.approacher.approach_line(combined_error_signal)
+                approaching_finished = final_shift is not None
                 if approaching_finished:
+                    # FIXME: use the final shift here
                     self._lock()
 
             elif self.parameters.autolock_watching.value:

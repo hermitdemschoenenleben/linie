@@ -61,14 +61,7 @@ class Approacher:
         self.history.append('shift %f' % (-1 * shift))
 
         if self.N_at_this_zoom == 0:
-            # if we are at the final zoom, we should be very quick.
-            # Therefore, we just correct the current and turn the lock on
-            # immediately. We skip the rest of this method (drift detection etc.)
-            next_step_is_lock = self.zoom_factor >= self.target_zoom
-            if next_step_is_lock:
-                return True
-            else:
-                self._correct_current(shift)
+            self._correct_current(shift)
         else:
             # wait for some time after the last current correction
             min_wait_time = 1 if self.wait_time_between_current_corrections is None else self.wait_time_between_current_corrections
@@ -89,7 +82,11 @@ class Approacher:
             if low_recording_rate or drift_slow:
                 is_close_to_target = shift < self.parameters.ramp_amplitude.value / 8
                 if is_close_to_target:
-                    return self._decrease_scan_range()
+                    next_step_is_lock = self.zoom_factor >= self.target_zoom
+                    if next_step_is_lock:
+                        return shift
+                    self._decrease_scan_range()
+                    return
                 else:
                     self._correct_current(shift)
 
